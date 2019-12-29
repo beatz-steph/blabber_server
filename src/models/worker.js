@@ -30,11 +30,13 @@ const workerSchema = new mongoose.Schema({
     },
     employer: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     department: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Workers_collection'
+        ref: 'Workers_collection',
+        required: true
     }
 
 })

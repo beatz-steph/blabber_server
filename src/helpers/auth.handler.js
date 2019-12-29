@@ -15,20 +15,20 @@ exports.signin = async function(req, res, next){
         }
 
         let isMatch = await user.comparePassword(req.body.password)
-        let {id, firstname, surname, photoURL, email,department} = user
+        let {id, firstname, surname, photoURL, email, workers_collection} = user
         if(isMatch){
             let token = jwt.sign({
             id,
             firstname,
             surname,
             email,
-            department
             }, process.env.SECRET_KEY)
 
             return res.status(200).json({
                 id,
                 firstname,
                 surname,
+                workers_collection,
                 token,
                 photoURL 
             })
@@ -46,14 +46,13 @@ exports.signin = async function(req, res, next){
 exports.signup = async function(req,res,next){
     try{
         let user = await db.User.create(req.body)
-        let {id,firstname, surname, email, password,photoURL, department} = user
+        let {id,firstname, surname, email,photoURL, workers_collection} = user
 
         let token = jwt.sign({
             id,
             firstname,
             surname,
             email,
-            department
         }, process.env.SECRET_KEY)
 
         return res.json({
@@ -61,7 +60,8 @@ exports.signup = async function(req,res,next){
             firstname,
             surname,
             token,
-            photoURL
+            photoURL,
+            workers_collection
         })
 
     }catch(err){

@@ -32,4 +32,10 @@ exports.createWorker = async function(req, res, next) {
     }
 }
 
+exports.editWorker = async function(req, res, next){
+    
+}
+
+exports.deleteWorker = async function(req,res,next){}
+
 module.exports = exports

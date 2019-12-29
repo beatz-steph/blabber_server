@@ -14,6 +14,10 @@ app.use(cors())
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({extended: true}))
 
+//additional middlewares
+
+const {loginRequired, authorizationRequired} = require('./src/middleware/auth.middleware')
+
 //sub-route handling fnctions
 const auth_routes = require('./src/routes/auth.routes')
 const workers_routes = require('./src/routes/workers.routes')
@@ -23,7 +27,7 @@ const workers_routes = require('./src/routes/workers.routes')
 //all routes handling
 
 app.use('/api/v1/auth', auth_routes)
-app.use('/api/v1/user/:id/workers_collection', workers_routes)
+app.use('/api/v1/user/:id/workers_collection',loginRequired, authorizationRequired, workers_routes)
 
 
 app.use(function(req, res, next) {
