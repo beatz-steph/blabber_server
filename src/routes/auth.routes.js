@@ -1,12 +1,30 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 
-const db = require('../models')
+const db = require('../models');
 
-const {signin, signup, getProfile} = require('../helpers/auth.handler')
+const {
+	docGetProfile,
+	docSignin,
+	docSignup,
+} = require('../helpers/doctorAuth');
 
-router.post('/signup', signup )
-router.post('/signin', signin)
-router.get('/', getProfile)
+const {
+	patientGetProfile,
+	patientSignin,
+	patientSignup,
+} = require('../helpers/patientAuth');
 
-module.exports = router
+//doctor auth routes
+
+router.post('/doctor/signup', docSignup);
+router.post('/doctor/signin', docSignin);
+router.get('/doctor', docGetProfile);
+
+//patinet auth route
+
+router.post('/patient/signup', patientSignup);
+router.post('/patient/signin', patientSignin);
+router.get('/patient', patientGetProfile);
+
+module.exports = router;
