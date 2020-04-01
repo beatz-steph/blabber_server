@@ -74,7 +74,7 @@ exports.docSignup = async function(req, res, next) {
 	}
 };
 
-exports.docGetProfile = async function(req, res, next) {
+exports.getProfile = async function(req, res, next) {
 	if (!req.headers.authorization) {
 		return next({
 			status: 401,
@@ -86,9 +86,12 @@ exports.docGetProfile = async function(req, res, next) {
 		jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
 			if (decoded) {
 				const retrieveInfo = async function() {
+					let user;
 					try {
-						let doctor = await db.Doctor.findById(decoded.id);
-						let { id, email, firstname, surname } = doctor;
+						decoded.mdcn
+							? (user = await db.Doctor.findById(decoded.id))
+							: (user = await db.Patient.findById(decoded.id));
+						let { id, email, firstname, surname } = user;
 						return res.status(200).json({
 							doctor: { id, email, firstname, surname },
 						});

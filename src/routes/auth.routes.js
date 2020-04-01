@@ -3,11 +3,7 @@ const router = express.Router();
 
 const db = require('../models');
 
-const {
-	docGetProfile,
-	docSignin,
-	docSignup,
-} = require('../helpers/doctorAuth');
+const { getProfile, docSignin, docSignup } = require('../helpers/doctorAuth');
 
 const {
 	patientGetProfile,
@@ -19,12 +15,11 @@ const {
 
 router.post('/doctor/signup', docSignup);
 router.post('/doctor/signin', docSignin);
-router.get('/doctor', docGetProfile);
+router.get('/', getProfile);
 
 //patinet auth route
 
 router.post('/patient/signup', patientSignup);
 router.post('/patient/signin', patientSignin);
-router.get('/patient', patientGetProfile);
 
 module.exports = router;
