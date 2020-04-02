@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 mongoose.set('debug', true);
 mongoose.Promise = Promise;
 
-mongoose.connect('mongodb://localhost/medicare', {
+mongoose.connect(process.env.db, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 });

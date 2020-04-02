@@ -1,5 +1,5 @@
 //importing environment config
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
 const http = require('http');
 
@@ -139,6 +139,10 @@ app.use(
 );
 
 app.get('/api/v1/news', retrieveNews);
+
+app.use('/', (req, res, next) => {
+	res.json({ msg: 'welcome' });
+});
 
 app.use(function(req, res, next) {
 	let err = new Error('Not found');
