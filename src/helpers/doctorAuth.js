@@ -92,9 +92,13 @@ exports.getProfile = async function(req, res, next) {
 							? (user = await db.Doctor.findById(decoded.id))
 							: (user = await db.Patient.findById(decoded.id));
 						let { id, email, firstname, surname } = user;
-						return res.status(200).json({
-							doctor: { id, email, firstname, surname },
-						});
+						return res
+							.status(200)
+							.json(
+								decoded.mdcn
+									? { doctor: { id, email, firstname, surname } }
+									: { patient: { id, email, firstname, surname } },
+							);
 					} catch (err) {
 						return next({
 							status: 401,

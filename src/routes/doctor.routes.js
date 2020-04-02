@@ -10,6 +10,7 @@ const {
 	createEmergencyRequest,
 	cancelEmergencyRequest,
 	confirmEmergencyRequest,
+	getAllPatients,
 } = require('../helpers/doctor.handlers');
 
 router.post('/news', createNews);
@@ -23,5 +24,6 @@ router.post('/emergency/:patientId', createEmergencyRequest);
 router.post('/emergency/:drugId/cancel', cancelEmergencyRequest);
 router.post('/emergency/:drugId/confirm', confirmEmergencyRequest);
 
+router.get('/patients', getAllPatients);
 
 module.exports = router;

@@ -160,4 +160,15 @@ exports.confirmEmergencyRequest = async function(req, res, next) {
 		return next(err);
 	}
 };
+
+exports.getAllPatients = async (req, res, next) => {
+	try {
+		//get all patients reistered
+		let patients = await db.Patient.find();
+		//return list of all patients
+		return res.status(200).json(patients);
+	} catch (err) {
+		return next(err);
+	}
+};
 module.exports = exports;
