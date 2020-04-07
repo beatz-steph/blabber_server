@@ -28,7 +28,7 @@ const io = socketio(server);
 const patients = [];
 const doctors = [];
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
 	let index;
 	let profession;
 	// socket.emit('message', { text: 'Welcome mutherfucker' });
@@ -47,6 +47,14 @@ io.on('connection', socket => {
 				'doctor',
 			),
 		);
+
+		socket.broadcast.to('doctor').emit(
+			'PatientIsonline',
+			msgFormatter(
+				patients.map((patients) => patients.details),
+				'a patient is online',
+			),
+		);
 	});
 
 	socket.on('patientMessage', ({ message, details }) => {
@@ -58,7 +66,7 @@ io.on('connection', socket => {
 
 	socket.on('doctorMessage', ({ message, to }) => {
 		//find a specific online user
-		let index = patients.findIndex(user => user.details.id === to);
+		let index = patients.findIndex((user) => user.details.id === to);
 		//send mesage to user
 		if (index === -1) {
 			return;
@@ -73,7 +81,6 @@ io.on('connection', socket => {
 			'message',
 			msgFormatter(patients[index].details, message, 'doctor'),
 		);
-		console.log('ok');
 	});
 
 	socket.on('doctorOnline', ({ details }) => {
@@ -88,14 +95,33 @@ io.on('connection', socket => {
 			'message',
 			msgFormatter(details, `welcome doctor ${details.firstname}`, 'doctor'),
 		);
+
+		socket.emit(
+			'PatientIsonline',
+			msgFormatter(
+				patients.map((patients) => patients.details),
+				'a patient is online',
+			),
+		);
 	});
 
 	socket.on('disconnect', () => {
 		profession === 'patient'
-			? patients.splice(index)[0]
-			: doctors.splice(index)[0];
+			? patients.splice(index, 1)
+			: doctors.splice(index, 1);
 
 		console.log(`${profession} disconexted`);
+		console.log(patients);
+
+		profession === 'patient'
+			? socket.to('doctor').emit(
+					'PatientIsonline',
+					msgFormatter(
+						patients.map((patients) => patients.details),
+						'a patient is offline',
+					),
+			  )
+			: null;
 	});
 });
 
@@ -144,7 +170,7 @@ app.use('/', (req, res, next) => {
 	res.json({ msg: 'welcome' });
 });
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	let err = new Error('Not found');
 	err.status = 404;
 	next(err);
@@ -152,6 +178,6 @@ app.use(function(req, res, next) {
 
 app.use(errorHandler);
 
-server.listen(PORT, function() {
+server.listen(PORT, function () {
 	console.log(`listen on port ${PORT}`);
 });
